@@ -1,0 +1,13 @@
+[Unit]
+Description=check running sunloginclinet loop
+
+
+[Service]
+Type=simple
+ExecStart=-/usr/local/sunlogin/bin/oray_rundaemon -m server
+KillMode=process
+ExecStop=
+
+
+[Install]
+WantedBy=multi-user.target

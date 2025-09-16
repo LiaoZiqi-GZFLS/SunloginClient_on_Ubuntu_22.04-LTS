@@ -1,0 +1,5 @@
+#!/bin/bash
+if [ -f "/usr/local/sunlogin/scripts/enterprise" ]; then
+	echo "error: please uninstall sunloginenterprise package first."
+	exit 1;
+fi

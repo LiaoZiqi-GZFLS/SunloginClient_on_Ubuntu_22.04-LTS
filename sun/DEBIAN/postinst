@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#change directory to script path
+curpath=$(cd "$(dirname "$0")"; pwd)
+cd $curpath > /dev/null
+
+source /usr/local/sunlogin/scripts/common.sh
+
+#kill all runing sunloginclient
+killall sunloginclient > /dev/null 2>&1
+
+#clear log files
+if [ -d '/var/log/sunlogin' ]; then
+  rm -rf /var/log/sunlogin
+fi
+
+mkdir /var/log/sunlogin
+chmod 777 /var/log/sunlogin
+
+if [ ! -f '/etc/orayconfig.conf' ]; then
+  touch /etc/orayconfig.conf
+fi
+
+#config access 
+chmod 644 /etc/orayconfig.conf
+
+os_version_int=${os_version%.*}
+for i in $(seq 1 10)
+do
+	os_version_int=${os_version_int%.*}
+done
+
+chmod 644 /usr/share/applications/sunlogin.desktop
+chmod 644 /usr/local/sunlogin/res/skin/*.skin
+chmod 644 /usr/local/sunlogin/res/icon/*
+
+#echo "create init"
+if [ $os_name == 'ubuntu' ]; then
+	if [ -n "$os_version_int" ] && [ $os_version_int -lt 15 ]; then
+		cp /usr/local/sunlogin/scripts/runsunloginclient.conf /etc/init/runsunloginclient.conf || echoAndExit 'can not copy init file runsunloginclient.conf'
+	else
+		cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+		systemctl enable runsunloginclient.service
+	fi
+
+elif [ $os_name == 'kylin' ]; then
+	cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+	systemctl enable runsunloginclient.service
+
+elif [ $os_name == 'nfs_desktop' ]; then
+	cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+	systemctl enable runsunloginclient.service
+
+elif [ $os_name == 'deepin' ]; then
+
+	if [ -n "$os_version_int" ] && [ $os_version_int -gt 2000 ]; then
+		let os_version_int=os_version_int-2000
+	fi
+	if [ -n "$os_version_int" ] && [ $os_version_int -lt 15 ]; then
+		cp /usr/local/sunlogin/scripts/runsunloginclient.conf /etc/init/runsunloginclient.conf || echoAndExit 'can not copy init file runsunloginclient.conf'
+	else
+		cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+		systemctl enable runsunloginclient.service
+	fi
+
+elif [ $os_name == 'loongnix' ]; then
+	cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+	systemctl enable runsunloginclient.service
+
+elif [ $srv_type == 'systemd' ]; then
+	cp /usr/local/sunlogin/scripts/runsunloginclient.service /etc/systemd/system/runsunloginclient.service || echoAndExit 'can not copy init file runsunloginclient.service'
+	systemctl enable runsunloginclient.service
+
+elif [ $srv_type == 'initd' ]; then
+	cp /usr/local/sunlogin/scripts/runsunloginclient.conf /etc/init/runsunloginclient.conf || echoAndExit 'can not copy init file runsunloginclient.conf'
+	
+fi
+
+/usr/local/sunlogin/scripts/start.sh

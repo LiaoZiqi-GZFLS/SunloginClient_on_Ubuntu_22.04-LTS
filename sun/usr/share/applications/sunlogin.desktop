@@ -1,0 +1,15 @@
+[Desktop Entry]
+Comment=Sunlogin Remote Control is a software that supports remote control of mobile devices, Windows, Mac, Linux and other systems. It is the best choice for IT technology, game players, designers and other people with remote management needs. 
+Comment[zh_CN]=向日葵远程控制软件是一个支持移动设备、Windows、Mac、Linux等多系统多设备间相互远程控制的软件，是具有远程管理等需求的IT技术、游戏玩家、设计师等人群的不二选择。
+Exec=/usr/local/sunlogin/bin/sunloginclient
+GenericName=Sunlogin Client
+GenericName[zh_CN]=向日葵远程控制
+Name=Sunlogin Client
+Name[zh_CN]=向日葵远程控制
+StartupNotify=false
+Terminal=false
+Type=Application
+Categories=Network;RemoteControl;
+Icon=/usr/local/sunlogin/res/icon/sunlogin_client.png
+# Remove under line for fixing icon bug in taskbar
+#StartupWMClass=sunloginclient

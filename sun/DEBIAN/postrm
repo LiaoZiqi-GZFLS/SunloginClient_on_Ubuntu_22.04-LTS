@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ "$1" == "purge" ]; then
+	if [ -f "/etc/orayconfig.conf" ]; then
+		rm /etc/orayconfig.conf
+	fi
+fi
+if [ -f "/etc/xdg/autostart/sunlogin.desktop" ];then
+	rm /etc/xdg/autostart/sunlogin.desktop
+fi

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+
+#change directory to script path
+curpath=$(cd "$(dirname "$0")"; pwd)
+cd $curpath > /dev/null
+
+source /usr/local/sunlogin/scripts/common.sh
+
+bash /usr/local/sunlogin/scripts/stop.sh
+os_version_int=${os_version%.*}
+for i in $(seq 1 10)
+do
+	os_version_int=${os_version_int%.*}
+done
+
+if [ "$os_name" == "ubuntu" ]; then
+	if [ -n "$os_version_int" ] && [ $os_version_int -lt 15 ]; then
+		rm /etc/init/runsunloginclient.conf > /dev/null 2>&1
+	else
+		systemctl disable runsunloginclient.service
+		rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+	fi
+elif [  $os_name == 'nfs_desktop' ]; then
+	systemctl disable runsunloginclient.service
+	rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+
+elif [ "$os_name" == "kylin" ]; then
+	systemctl disable runsunloginclient.service
+	rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+
+elif [ "$os_name" == "deepin" ]; then
+	if [ -n "$os_version_int" ] && [ $os_version_int -gt 2000 ]; then
+		let os_version_int=os_version_int-2000
+	fi
+	if [ -n "$os_version_int" ] && [ $os_version_int -lt 15 ]; then
+		rm /etc/init/runsunloginclient.conf > /dev/null 2>&1
+	else
+		systemctl disable runsunloginclient.service
+		rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+	fi
+
+elif [ "$os_name" == "loongnix" ]; then
+	systemctl disable runsunloginclient.service
+	rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+
+elif [ "$srv_type" == "systemd" ]; then
+	systemctl disable runsunloginclient.service
+	rm /etc/systemd/system/runsunloginclient.service > /dev/null 2>&1
+
+elif [ "$srv_type" == "initd" ]; then
+	rm /etc/init/runsunloginclient.conf > /dev/null 2>&1
+
+fi
+
